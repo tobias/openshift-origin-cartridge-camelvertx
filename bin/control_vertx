@@ -103,6 +103,17 @@ function build() {
 			sed -i -e "s/\${env.OPENSHIFT_CAMELVERTX_IP}/${OPENSHIFT_CAMELVERTX_IP}/g" ./web.js
 			sed -i -e "s/\${env.OPENSHIFT_CAMELVERTX_DIR}/${AG_DIR}/g" ./web-handlers.js
 		popd
+		
+		pushd ${OPENSHIFT_CAMELVERTX_DIR}/template
+		
+			rm -rf vertx/aerogear
+		
+			git clone https://bdecoste:cyclone1@github.com/projectodd/keynote-demo-2013.git
+
+			mv keynote-demo-2013/aerogear vertx
+			rm -rf keynote-demo-2013
+
+		popd
 
 }
 
