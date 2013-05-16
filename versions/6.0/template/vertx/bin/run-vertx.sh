@@ -7,4 +7,4 @@ echo "VERTX_HOME: $VERTX_HOME"
 
 export TORQUEBOX_HOST="bam.keynote.projectodd.org"
 
-$VERTX_HOME/bin/vertx run  ./server.js  -cluster -cluster-port 9123 -cluster-host ${env.OPENSHIFT_CAMELVERTX_IP}
+$VERTX_HOME/bin/vertx run  ./server.js  -cluster -cluster-port 9123 -cluster-host ${env.OPENSHIFT_CAMELVERTX_IP} -advertise-port ${env.OPENSHIFT_CAMELVERTX_VERTX_PROXY_PORT} -advertise-host ${env.OPENSHIFT_CAMELVERTX_PROXY_IP}
