@@ -1,2 +1,0 @@
-openshift-origin-cartridge-camelvertx
-=====================================
