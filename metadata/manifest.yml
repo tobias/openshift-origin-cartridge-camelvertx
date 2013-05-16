@@ -8,7 +8,7 @@ License-Url: http://www.gnu.org/copyleft/lesser.txt
 Vendor: JBoss
 Cartridge-Version: 0.0.1
 Cartridge-Vendor: jboss
-Source-Url: http://github.com/openshift/origin-community-cartridges/openshift-origin-cartridge-camelvertx
+Source-Url: https://github.com/bdecoste/openshift-origin-cartridge-camelvertx.git
 Categories:
   - service
   - web_framework
