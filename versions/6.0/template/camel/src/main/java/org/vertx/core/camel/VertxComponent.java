@@ -19,7 +19,6 @@ package org.vertx.core.camel;
 
 import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultComponent;
-import org.jboss.sfsbTest.SfsbServlet;
 import org.vertx.java.core.Vertx;
 
 import java.util.Map;
