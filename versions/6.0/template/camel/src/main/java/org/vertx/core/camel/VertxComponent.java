@@ -67,6 +67,7 @@ public class VertxComponent extends DefaultComponent {
 
 
     public Vertx getVertx() {
+    	System.out.println("!!!!!!!!!!!!!!getVertx " + host + ":" + port + " " + advertiseHost + ":" + advertisePort);
         if (vertx == null) {
             // lets using a host / port if a host name is specified
             if (host != null && host.length() > 0) {
