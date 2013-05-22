@@ -32,6 +32,11 @@ public class VertxComponent extends DefaultComponent {
     private int port = 5701;
     private String advertiseHost = "127.0.0.1";
     private int advertisePort = 5701;
+    
+    public VertxComponent() {
+    	super();
+    	System.out.println("!!!!!!!!!!!!!!new VertxComponent ");
+    }
 
     public String getHost() {
         return host;
