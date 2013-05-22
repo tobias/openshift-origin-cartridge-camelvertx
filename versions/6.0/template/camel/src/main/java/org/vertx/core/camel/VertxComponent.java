@@ -19,25 +19,23 @@ package org.vertx.core.camel;
 
 import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultComponent;
+import org.jboss.sfsbTest.SfsbServlet;
 import org.vertx.java.core.Vertx;
 
 import java.util.Map;
+
 
 /**
  * A Camel Component for <a href="http://vertx.io/">vert.x</a>
  */
 public class VertxComponent extends DefaultComponent {
+	
     private Vertx vertx;
     private String host = "127.0.0.1";
     private int port = 5701;
     private String advertiseHost = "127.0.0.1";
     private int advertisePort = 5701;
-    
-    public VertxComponent() {
-    	super();
-    	System.out.println("!!!!!!!!!!!!!!new VertxComponent ");
-    }
-
+   
     public String getHost() {
         return host;
     }
@@ -72,7 +70,6 @@ public class VertxComponent extends DefaultComponent {
 
 
     public Vertx getVertx() {
-    	System.out.println("!!!!!!!!!!!!!!getVertx " + host + ":" + port + " " + advertiseHost + ":" + advertisePort);
         if (vertx == null) {
             // lets using a host / port if a host name is specified
             if (host != null && host.length() > 0) {
