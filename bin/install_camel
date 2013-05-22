@@ -12,7 +12,7 @@ JBOSS_HOME=/etc/alternatives/jbosseap-$version
 
 pushd $OPENSHIFT_CAMELVERTX_DIR > /dev/null
   ln -s ${JBOSS_HOME}/jboss-modules.jar
-  ln -s ${JBOSS_HOME}/modules/system/layers/base/ modules
+  ln -s ${JBOSS_HOME}/modules
 popd > /dev/null
 
 JAVA_HOME=/etc/alternatives/java_sdk_1.7.0
