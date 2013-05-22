@@ -29,7 +29,7 @@ function isrunning() {
       fi
     fi
    
-    return 1
+    return 0
 }
 
 # Kill the process given by $1 and its children
