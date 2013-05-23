@@ -8,7 +8,7 @@ cp -r ${OPENSHIFT_CAMELVERTX_DIR}/versions/${version}/template/camel/.openshift 
 cp ${OPENSHIFT_CAMELVERTX_DIR}/standalone/configuration/standalone.xml ${OPENSHIFT_CAMELVERTX_DIR}/template/camel/.openshift/config
 sed -i "s/{APP_NAME}/${OPENSHIFT_APP_NAME}/g" ${OPENSHIFT_CAMELVERTX_DIR}/template/camel/pom.xml
 
-JBOSS_HOME=/etc/alternatives/jbosseap-$version
+JBOSS_HOME=/etc/alternatives/jbossas-7
 
 pushd $OPENSHIFT_CAMELVERTX_DIR > /dev/null
   ln -s ${JBOSS_HOME}/jboss-modules.jar
