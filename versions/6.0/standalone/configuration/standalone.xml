@@ -3,8 +3,7 @@
 <server xmlns="urn:jboss:domain:1.1">
 
     <extensions>
-        <extension module="org.jboss.as.clustering.infinispan"/>
-        <extension module="org.jboss.as.clustering.jgroups"/>
+        <extension module="org.jboss.as.clustering.infinispan" />
         <extension module="org.jboss.as.cmp"/>
         <extension module="org.jboss.as.configadmin"/>
         <extension module="org.jboss.as.connector"/>
@@ -180,52 +179,21 @@
             <!--iiop enable-by-default="false" use-qualified-name="false"/-->
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:infinispan:1.1" default-cache-container="cluster">
-            <cache-container name="cluster" aliases="ha-partition" default-cache="default">
-                <transport lock-timeout="60000"/>
-                <replicated-cache name="default" mode="SYNC" batching="true">
-                    <locking isolation="REPEATABLE_READ"/>
-                </replicated-cache>
-            </cache-container>
-            <cache-container name="web" aliases="standard-session-cache" default-cache="repl">
-                <transport lock-timeout="60000"/>
-                <replicated-cache name="repl" mode="ASYNC" batching="true">
-                    <file-store/>
-                </replicated-cache>
-                <replicated-cache name="sso" mode="SYNC" batching="true"/>
-                <distributed-cache name="dist" mode="ASYNC" batching="true">
-                    <file-store/>
-                </distributed-cache>
-            </cache-container>
-            <cache-container name="ejb" aliases="sfsb sfsb-cache" default-cache="repl">
-                <transport lock-timeout="60000"/>
-                <replicated-cache name="repl" mode="ASYNC" batching="true">
-                    <eviction strategy="LRU"/>
-                    <file-store/>
-                </replicated-cache>
-                <!-- Clustered cache used internally by EJB subsytem for managing the client-mapping(s) of
-                the socketbinding referenced by the EJB remoting connector -->
-                <replicated-cache name="remote-connector-client-mappings" mode="SYNC" batching="true"/>
-                <distributed-cache name="dist" mode="ASYNC" batching="true">
-                    <eviction strategy="LRU"/>
-                    <file-store/>
-                </distributed-cache>
-            </cache-container>
-            <cache-container name="hibernate" default-cache="local-query">
-                <transport lock-timeout="60000"/>
+           <cache-container name="hibernate" default-cache="local-query" module="org.jboss.as.jpa.hibernate:4">
+                <local-cache name="entity">
+                    <transaction mode="NON_XA"/>
+                    <eviction strategy="LRU" max-entries="10000"/>
+                    <expiration max-idle="100000"/>
+                </local-cache>
                 <local-cache name="local-query">
                     <transaction mode="NONE"/>
                     <eviction strategy="LRU" max-entries="10000"/>
                     <expiration max-idle="100000"/>
                 </local-cache>
-                <invalidation-cache name="entity" mode="SYNC">
-                    <transaction mode="NON_XA"/>
-                    <eviction strategy="LRU" max-entries="10000"/>
-                    <expiration max-idle="100000"/>
-                </invalidation-cache>
-                <replicated-cache name="timestamps" mode="ASYNC">
+                <local-cache name="timestamps">
                     <transaction mode="NONE"/>
                     <eviction strategy="NONE"/>
-                </replicated-cache>
+                </local-cache>
             </cache-container>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:jaxr:1.0">
@@ -252,41 +220,6 @@
             </default-workmanager>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:jdr:1.0"/>
-        <subsystem xmlns="urn:jboss:domain:jgroups:1.0" default-stack="tcp">
-            <stack name="tcp">
-                <transport type="TCP" socket-binding="jgroups-tcp"> 
-                	<property name="external_addr">${env.OPENSHIFT_GEAR_DNS}</property>
-                    <property name="external_port">${env.OPENSHIFT_JBOSSAS_CLUSTER_PROXY_PORT}</property>
-                    <property name="bind_port">7600</property>
-                    <property name="bind_addr">${env.OPENSHIFT_INTERNAL_IP}</property>
-                    <property name="defer_client_bind_addr">true</property>
-                </transport>
-                <protocol type="TCPPING">
-                	<property name="timeout">30000</property>
-                	<property name="initial_hosts">${env.OPENSHIFT_JBOSSAS_CLUSTER}</property>
-                	<property name="port_range">0</property>
-                	<property name="num_initial_members">1</property>
-                </protocol>
-                <protocol type="MERGE2"/>
-                <protocol type="FD"/>
-                <protocol type="VERIFY_SUSPECT"/>
-                <protocol type="BARRIER"/>
-                <protocol type="pbcast.NAKACK"/>
-                <protocol type="UNICAST2"/>
-                <protocol type="pbcast.STABLE"/>
-                <protocol type="AUTH">
-                        <property name="auth_class">org.jgroups.auth.MD5Token</property>
-                        <property name="token_hash">SHA</property>
-                        <property name="auth_value">${env.OPENSHIFT_APP_UUID}</property>
-                </protocol>
-                <protocol type="pbcast.GMS"/>
-                <protocol type="UFC"/>
-                <protocol type="MFC"/>
-                <protocol type="FRAG2"/>  
-                <!--protocol type="pbcast.STATE_TRANSFER"/>
-                <protocol type="pbcast.FLUSH"/-->
-            </stack>
-        </subsystem>
         <subsystem xmlns="urn:jboss:domain:jmx:1.1">
             <show-model value="true"/>
             <remoting-connector/>
@@ -388,7 +321,6 @@
 
     <socket-binding-group name="standard-sockets" default-interface="public" port-offset="0">
         <socket-binding name="http" port="18001"/>
-        <socket-binding name="jgroups-tcp" port="7600"/>
         <socket-binding name="management-native" interface="management" port="9999"/>
         <socket-binding name="management-http" interface="management" port="9990"/>
         <socket-binding name="osgi-http" interface="management" port="8090"/>
