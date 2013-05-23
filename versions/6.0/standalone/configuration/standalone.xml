@@ -179,7 +179,7 @@
             <!--iiop enable-by-default="false" use-qualified-name="false"/-->
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:infinispan:1.1" default-cache-container="cluster">
-           <cache-container name="hibernate" default-cache="local-query" module="org.jboss.as.jpa.hibernate:4">
+           <cache-container name="hibernate" default-cache="local-query">
                 <local-cache name="entity">
                     <transaction mode="NON_XA"/>
                     <eviction strategy="LRU" max-entries="10000"/>

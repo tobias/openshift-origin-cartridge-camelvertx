@@ -80,7 +80,7 @@ function ishttpup() {
         sleep 2
     done
 
-    return 0
+    return 1
 }
 
 function build() {

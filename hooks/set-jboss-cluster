@@ -16,5 +16,6 @@ for arg in $kvargs; do
     fi
 done
 
-set_uservars "OPENSHIFT_CAMELVERTX_CLUSTER=OPENSHIFT_CAMELVERTX_CLUSTER=${list}"
+echo $list > $OPENSHIFT_CAMELVERTX_DIR/env/OPENSHIFT_CAMELVERTX_CLUSTER
+
 
