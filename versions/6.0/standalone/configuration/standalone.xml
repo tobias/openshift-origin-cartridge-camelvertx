@@ -11,7 +11,6 @@
         <extension module="org.jboss.as.deployment-scanner"/>
         <extension module="org.jboss.as.ee"/>
         <extension module="org.jboss.as.ejb3"/>
-        <extension module="org.jboss.as.jacorb"/>
         <extension module="org.jboss.as.jaxr"/>
         <extension module="org.jboss.as.jaxrs"/>
         <extension module="org.jboss.as.jdr"/>
@@ -20,7 +19,6 @@
         <extension module="org.jboss.as.jsr77"/>
         <extension module="org.jboss.as.logging"/>
         <extension module="org.jboss.as.mail"/>
-        <extension module="org.jboss.as.messaging"/>
         <extension module="org.jboss.as.naming"/>
         <extension module="org.jboss.as.osgi"/>
         <extension module="org.jboss.as.pojo"/>
@@ -73,12 +71,6 @@
             </logger>
             <logger category="sun.rmi">
                 <level name="WARN"/>
-            </logger>
-            <logger category="jacorb">
-                <level name="WARN"/>
-            </logger>
-            <logger category="jacorb.config">
-                <level name="ERROR"/>
             </logger>
             <root-logger>
                 <level name="INFO"/>
@@ -236,11 +228,6 @@
                 </replicated-cache>
             </cache-container>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:jacorb:1.1">
-            <orb>
-            	<initializers transactions="spec" security="on"/>
-            </orb>
-        </subsystem>
         <subsystem xmlns="urn:jboss:domain:jaxr:1.0">
             <connection-factory jndi-name="java:jboss/jaxr/ConnectionFactory"/>
             <juddi-server publish-url="http://${env.OPENSHIFT_INTERNAL_IP}:8080/juddi/publish" query-url="http://${env.OPENSHIFT_INTERNAL_IP}:8080/juddi/query"/>
@@ -313,124 +300,6 @@
                 <smtp-server outbound-socket-binding-ref="mail-smtp"/>
             </mail-session>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:messaging:1.1">
-            <hornetq-server>
-                <clustered>true</clustered>
-                <persistence-enabled>true</persistence-enabled>
-                <!--security-domain>messaging</security-domain-->
-                <security-enabled>false</security-enabled>
-                <journal-file-size>102400</journal-file-size>
-                <journal-min-files>2</journal-min-files>
-                
-                <thread-pool-max-size>${messaging.thread.pool.max.size}</thread-pool-max-size>
- 	            <scheduled-thread-pool-max-size>${messaging.scheduled.thread.pool.max.size}</scheduled-thread-pool-max-size>
-
-                <connectors>
-                    <netty-connector name="netty" socket-binding="messaging"/>
-                    <netty-connector name="netty-throughput" socket-binding="messaging-throughput">
-                        <param key="batch-delay" value="50"/>
-                    </netty-connector>
-                    <in-vm-connector name="in-vm" server-id="0"/>
-                </connectors>
-
-                <acceptors>
-                    <netty-acceptor name="netty" socket-binding="messaging"/>
-                    <netty-acceptor name="netty-throughput" socket-binding="messaging-throughput">
-                        <param key="batch-delay" value="50"/>
-                        <param key="direct-deliver" value="false"/>
-                    </netty-acceptor>
-                    <in-vm-acceptor name="in-vm" server-id="0"/>
-                </acceptors>
-
-                <!--broadcast-groups>
-                    <broadcast-group name="bg-group1">
-                        <group-address>231.7.7.7</group-address>
-                        <group-port>9876</group-port>
-                        <broadcast-period>5000</broadcast-period>
-                        <connector-ref>
-                            netty
-                        </connector-ref>
-                    </broadcast-group>
-                </broadcast-groups>
-
-                <discovery-groups>
-                    <discovery-group name="dg-group1">
-                        <group-address>231.7.7.7</group-address>
-                        <group-port>9876</group-port>
-                        <refresh-timeout>10000</refresh-timeout>
-                    </discovery-group>
-                </discovery-groups>
-
-                <cluster-connections>
-                    <cluster-connection name="my-cluster">
-                        <address>jms</address>
-                        <connector-ref>netty</connector-ref>
-                        <discovery-group-ref discovery-group-name="dg-group1"/>
-                    </cluster-connection>
-                </cluster-connections-->
-
-                <!--security-settings>
-                    <security-setting match="#">
-                        <permission type="send" roles="guest"/>
-                        <permission type="consume" roles="guest"/>
-                        <permission type="createNonDurableQueue" roles="guest"/>
-                        <permission type="deleteNonDurableQueue" roles="guest"/>
-                    </security-setting>
-                </security-settings-->
-
-                <address-settings>
-                    <address-setting match="#">
-                        <dead-letter-address>jms.queue.DLQ</dead-letter-address>
-                        <expiry-address>jms.queue.ExpiryQueue</expiry-address>
-                        <redelivery-delay>0</redelivery-delay>
-                        <max-size-bytes>10485760</max-size-bytes>
-                        <address-full-policy>BLOCK</address-full-policy>
-                        <message-counter-history-day-limit>10</message-counter-history-day-limit>
-                        <redistribution-delay>1000</redistribution-delay>
-                    </address-setting>
-                </address-settings>
-
-                <jms-connection-factories>
-                    <connection-factory name="InVmConnectionFactory">
-                        <connectors>
-                            <connector-ref connector-name="in-vm"/>
-                        </connectors>
-                        <entries>
-                            <entry name="java:/ConnectionFactory"/>
-                        </entries>
-                    </connection-factory>
-                    <connection-factory name="RemoteConnectionFactory">
-                        <connectors>
-                            <connector-ref connector-name="netty"/>
-                        </connectors>
-                        <entries>
-                            <entry name="RemoteConnectionFactory"/>
-                            <entry name="java:jboss/exported/jms/RemoteConnectionFactory"/>
-                        </entries>
-                    </connection-factory>
-                    <pooled-connection-factory name="hornetq-ra">
-                        <transaction mode="xa"/>
-                        <connectors>
-                            <connector-ref connector-name="in-vm"/>
-                        </connectors>
-                        <entries>
-                            <entry name="java:/JmsXA"/>
-                        </entries>
-                    </pooled-connection-factory>
-                </jms-connection-factories>
-
-                <jms-destinations>
-                    <jms-queue name="testQueue">
-                        <entry name="queue/test"/>
-                        <entry name="java:jboss/exported/jms/queue/test"/>
-                    </jms-queue>
-                    <jms-topic name="testTopic">
-                        <entry name="topic/test"/>
-                        <entry name="java:jboss/exported/jms/topic/test"/>
-                    </jms-topic>
-                </jms-destinations>
-            </hornetq-server>
-        </subsystem>
         <subsystem xmlns="urn:jboss:domain:naming:1.1"/>
         <subsystem xmlns="urn:jboss:domain:osgi:1.2" activation="lazy">
             <properties>
@@ -470,14 +339,6 @@
                     <authorization>
                         <policy-module code="Delegating" flag="required"/>
                     </authorization>
-                </security-domain>
-                <security-domain name="messaging" cache-type="default">
-                    <authentication>
-                        <login-module code="UsersRoles" flag="required">
-                            <module-option name="usersProperties" value="${jboss.server.config.dir}/application-users.properties"/>
-                            <module-option name="rolesProperties" value="${jboss.server.config.dir}/application-roles.properties"/>
-                        </login-module>
-                    </authentication>
                 </security-domain>
             </security-domains>
         </subsystem>
@@ -526,14 +387,10 @@
     </interfaces>
 
     <socket-binding-group name="standard-sockets" default-interface="public" port-offset="0">
-        <socket-binding name="http" port="8080"/>
-        <socket-binding name="jacorb" interface="unsecure" port="3528"/>
-        <socket-binding name="jacorb-ssl" interface="unsecure" port="3529"/>
+        <socket-binding name="http" port="18001"/>
         <socket-binding name="jgroups-tcp" port="7600"/>
         <socket-binding name="management-native" interface="management" port="9999"/>
         <socket-binding name="management-http" interface="management" port="9990"/>
-        <socket-binding name="messaging" port="5445"/>
-        <socket-binding name="messaging-throughput" port="5455"/>
         <socket-binding name="osgi-http" interface="management" port="8090"/>
         <socket-binding name="remoting" port="4447"/>
         <socket-binding name="txn-recovery-environment" port="4712"/>
