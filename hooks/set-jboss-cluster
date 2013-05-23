@@ -16,7 +16,7 @@ for arg in $kvargs; do
     fi
 done
 
-echo "set $list" >> /log/log
+echo "set $list $OPENSHIFT_CAMELVERTX_DIR" >> /log/log
 
 echo $list > $OPENSHIFT_CAMELVERTX_DIR/env/OPENSHIFT_CAMELVERTX_CLUSTER
 
