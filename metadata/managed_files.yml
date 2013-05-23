@@ -4,8 +4,5 @@ locked_files:
 - bin/*
 - metadata/
 - metadata/*
-- env/
-- env/OPENSHIFT_CAMELVERTX_LOG_DIR
-- env/M2_HOME
 processed_templates:
 - '**/*.erb'
