@@ -18,7 +18,9 @@ var eb = vertx.eventBus;
 
 var client = vertx.createHttpClient();
 client.setPort( 8080 );
-client.setHost(java.lang.System.getProperty('torqueboxHost') || 'localhost');
+
+client.setHost(java.lang.System.getProperty('torqueboxHost') || 'bam.keynote.projectodd.org');
+
 
 var demoHandlers = {
   putRequestOnEventBus: function(address, mockData) {
@@ -46,17 +48,12 @@ var demoHandlers = {
     if ( basename === '' ) {
       basename = 'index.html';
     }
-    var filename = '${env.OPENSHIFT_CAMELVERTX_DIR}/template/vertx/aerogear/client/app/' + basename;
-  
+    var filename = './../aerogear/client/dist/' + basename;
+
     if ( vertx.fileSystem.existsSync( filename ) ) {
       request.response.sendFile( filename );
     } else {
     }
   },
-  
-  rootContext: function(request) {
-      request.response.end("KEYNOTE!");
-  },
-
 
 };
