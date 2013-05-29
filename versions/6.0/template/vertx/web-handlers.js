@@ -48,7 +48,7 @@ var demoHandlers = {
     if ( basename === '' ) {
       basename = 'index.html';
     }
-    var filename = './../aerogear/client/dist/' + basename;
+    var filename = '${env.OPENSHIFT_CAMELVERTX_DIR}/template/vertx/aerogear/client/app/' + basename;
 
     if ( vertx.fileSystem.existsSync( filename ) ) {
       request.response.sendFile( filename );
