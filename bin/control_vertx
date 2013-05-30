@@ -74,7 +74,7 @@ function stop() {
 
 function build() {
     	
-    	if [ -z $OPENSHIFT_CAMELVERTX_CLUSTER ]; then
+    	if [ -z "$OPENSHIFT_CAMELVERTX_CLUSTER" ]; then
     		OPENSHIFT_CAMELVERTX_CLUSTER="${OPENSHIFT_CAMELVERTX_IP}"
     	fi
     	
