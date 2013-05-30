@@ -55,7 +55,7 @@ public class VertxConsumer extends DefaultConsumer {
 
     protected void onEventBusEvent(Message event) {
         Exchange exchange = endpoint.createExchange();
-        exchange.getIn().setBody(event.body);
+        exchange.getIn().setBody(event.body.toString());
         try {
             getProcessor().process(exchange);
         } catch (Exception e) {
