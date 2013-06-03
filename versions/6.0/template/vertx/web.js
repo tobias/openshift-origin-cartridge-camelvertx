@@ -29,6 +29,6 @@ rm.allWithRegEx( '/(.*)',           demoHandlers.serveFile );
 
 var server = vertx.createHttpServer();
 server.requestHandler(rm);
-vertx.createSockJSServer(server).bridge({prefix: "/eventbus"}, [{}], [{}]);
+vertx.createSockJSServer(server).bridge({prefix: "/eventbus", session_timeout: 30000}, [{}], [{}]);
 
 server.listen(8080, '${env.OPENSHIFT_CAMELVERTX_IP}');
