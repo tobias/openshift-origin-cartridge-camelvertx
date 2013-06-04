@@ -51,10 +51,6 @@ var redirectIfNotHttpsWww = function(request) {
     request.response.end();
   }
   
-/* console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! redirect");
-  for ( var h in request.headers() ) {
-    console.log( h + ": " + request.headers()[h] );
-  }*/
   return redirect;
 };
 
@@ -62,6 +58,10 @@ var redirectIfNotHttpsWww = function(request) {
 var demoHandlers = {
   putRequestOnEventBus: function(address, mockData) {
     return function(request) {
+	  if ( redirectIfNotHttpsWww( request ) ) {
+        return;
+      }
+
       request.bodyHandler( function(body) {
         eb.publish( address, body.toString() );
       } );
@@ -71,6 +71,9 @@ var demoHandlers = {
   },
 
   proxyRequest: function(request) {
+    if ( redirectIfNotHttpsWww( request ) ) {
+        return;
+    }
     var proxyRequest = client.get( request.uri, function(proxyResponse) {
       request.response.putHeader( "content-length", proxyResponse.headers()[ "content-length" ] );
       var p = new vertx.Pump(proxyResponse, request.response);
@@ -81,6 +84,9 @@ var demoHandlers = {
   },
 
   serveFile: function(request) {
+    if ( redirectIfNotHttpsWww( request ) ) {
+        return;
+    }
     var basename = request.params().param0;
     if ( basename === '' ) {
       basename = 'index.html';
