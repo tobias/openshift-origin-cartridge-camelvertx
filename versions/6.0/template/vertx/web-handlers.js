@@ -21,6 +21,43 @@ client.setPort( 8080 );
 
 client.setHost(java.lang.System.getProperty('torqueboxHost') || 'bam.keynote.projectodd.org');
 
+var redirectIfNotHttpsWww = function(request) {
+  var hostHeader = request.headers()['host'];
+  var redirect = false;
+  if (hostHeader != null) {
+
+    var colonLoc = hostHeader.indexOf( ':' );
+    var host;
+    if ( colonLoc < 0 ) {
+      host = hostHeader;
+    } else {
+      host = hostHeader.substring( 0, colonLoc );
+    }
+ 
+    if ( host != 'www.jbosskeynote.com' ) {
+      redirect = true;
+    }
+  }
+
+  var forwardedProto = request.headers()['x-forwarded-proto'];
+  if ( ! forwardedProto || forwardedProto != 'https' ) {
+    redirect = true;
+  }
+
+  
+  if ( redirect ) {
+    request.response.statusCode = 301;
+    request.response.putHeader( 'location', 'https://www.jbosskeynote.com' + request.uri );
+    request.response.end();
+  }
+  
+/* console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! redirect");
+  for ( var h in request.headers() ) {
+    console.log( h + ": " + request.headers()[h] );
+  }*/
+  return redirect;
+};
+
 
 var demoHandlers = {
   putRequestOnEventBus: function(address, mockData) {
