@@ -166,6 +166,7 @@ eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $VERTX_OPTS
 
 exec "$JAVACMD" \
     "${JVM_OPTS[@]}" \
+    -Xmx512m \
     -Dhazelcast.jmx=true \
     -Dhazelcast.local.localAddress=${env.OPENSHIFT_CAMELVERTX_PROXY_IP} \
     -Dhazelcast.local.localBindAddress=${env.OPENSHIFT_CAMELVERTX_IP} \
