@@ -58,10 +58,6 @@ var redirectIfNotHttpsWww = function(request) {
 var demoHandlers = {
   putRequestOnEventBus: function(address, mockData) {
     return function(request) {
-	  if ( redirectIfNotHttpsWww( request ) ) {
-        return;
-      }
-
       request.bodyHandler( function(body) {
         eb.publish( address, body.toString() );
       } );
@@ -71,9 +67,6 @@ var demoHandlers = {
   },
 
   proxyRequest: function(request) {
-    if ( redirectIfNotHttpsWww( request ) ) {
-        return;
-    }
     var proxyRequest = client.get( request.uri, function(proxyResponse) {
       request.response.putHeader( "content-length", proxyResponse.headers()[ "content-length" ] );
       var p = new vertx.Pump(proxyResponse, request.response);
