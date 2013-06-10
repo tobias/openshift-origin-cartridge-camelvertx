@@ -97,10 +97,7 @@ var demoHandlers = {
     }
     var filename = '${env.OPENSHIFT_CAMELVERTX_DIR}/template/vertx/aerogear/client/dist/' + basename;
 
-    if ( vertx.fileSystem.existsSync( filename ) ) {
-      request.response.putHeader( "Cache-Control", "max-age=3600" ).sendFile( filename );
-    } else {
-    }
+    request.response.putHeader( "Cache-Control", "max-age=3600" ).sendFile( filename );
   },
 
 };
